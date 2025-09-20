@@ -28,6 +28,13 @@ const userSchema = new Schema(
       minlength: [5, "Email must have 5 characters"],
       lowercase: true,
     },
+    accountNumber: {
+      type: String,
+      unique: true,
+    },
+    accountName: {
+      type: String,
+    },
     address: {
       type: String,
       required: false,
@@ -45,7 +52,18 @@ const userSchema = new Schema(
   },
   { timestamps: true }
 );
+userSchema.pre("save", function (next) {
+  if (this.isModified("phonenumber")) {
+    this.accountNumber = this.phonenumber.substring(1);
+  }
+  0;
 
+  if (this.isModified("full_name")) {
+    this.accountName = this.full_name;
+  }
+
+  next();
+});
 userSchema.index({ email: 1 });
 userSchema.index({ username: 1 });
 const Auth = mongoose.model<AuthUser>("Auth", userSchema);

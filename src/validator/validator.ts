@@ -1,7 +1,7 @@
 import joi from "joi";
 
 const signup = joi.object({
-  phonenumber: joi.string().min(4).max(15).required(),
+  phonenumber: joi.string().length(11).required(),
   full_name: joi.string().min(4).max(60).required(),
 
   email: joi

@@ -6,6 +6,7 @@ import logger from "./util/logger.ts";
 import { HandleError, notFound } from "./middleware/ErrorHandling.ts";
 import authroute from "./routes/authroute.ts";
 import cookieParser from "cookie-parser";
+import transactionRoute from "./routes/transactionRoute.ts";
 
 const server: Express = express();
 
@@ -14,7 +15,7 @@ server.use(express.json());
 server.use(cookieParser());
 //routes
 server.use("/auth/v1", authroute);
-
+server.use("/user", transactionRoute);
 server.use(HandleError);
 server.use(notFound);
 server.listen(port, async () => {

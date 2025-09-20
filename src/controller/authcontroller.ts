@@ -6,15 +6,14 @@ import {
 } from "../validator/validator.ts";
 import type { inputbody } from "../type/types.ts";
 import { HandleResponse } from "../config/HandleResponse.ts";
-// import nodemailer from "nodemailer";
-
 import Auth from "../model/user_schema.ts";
 import argon2 from "argon2";
 import { hmacProcess } from "../config/hashcode.ts";
 import { HMAC_VERIFICATION_CODE_SECRET, JWT_SEC } from "../util/dotenv.ts";
 import Otpcode from "../config/generateotp.ts";
 import sendMail from "../config/sendemail.ts";
-
+import createBankAccount from "../model/Createbankaaccount.ts";
+import mongoose from "mongoose";
 const signup = async (
   req: Request,
   res: Response,
@@ -72,7 +71,7 @@ const signup = async (
         verificationCodeExpires: new Date(Date.now() + 10 * 60 * 1000),
       });
       await newUser.save();
-
+      await createBankAccount(newUser._id.toString(), phonenumber);
       return HandleResponse(
         res,
         true,
@@ -84,11 +83,19 @@ const signup = async (
         }
       );
     }
-  } catch (error) {
-    if (error instanceof Error) {
-      console.log(error.message);
-      next(error);
+  } catch (error: any) {
+    if (error.code === 11000) {
+      const field = Object.keys(error.keyValue)[0];
+      return HandleResponse(
+        res,
+        false,
+        400,
+        `A user with this ${field} already exists.`
+      );
     }
+
+    console.error(error);
+    next(error);
   }
 };
 
@@ -204,6 +211,7 @@ const login = async (
         isverify: user.isVerified,
         email: user.email,
         full_name: user.full_name,
+        accountNumber: user.accountNumber,
       },
       JWT_SEC,
       { expiresIn: "8h" }
@@ -219,6 +227,7 @@ const login = async (
         email: user.email,
         phonenumber: user.phonenumber,
         isVerified: user.isVerified,
+        accountNumber: user.accountNumber,
       },
     });
   } catch (error) {

@@ -5,6 +5,8 @@ export interface AuthUser extends mongoose.Document {
   _id: Types.ObjectId;
   full_name: string;
   phonenumber: string;
+  accountNumber: string;
+  accountName: string;
   email: string;
   password: string;
   address: string;
