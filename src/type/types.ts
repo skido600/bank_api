@@ -7,6 +7,7 @@ export interface AuthUser extends mongoose.Document {
   phonenumber: string;
   accountNumber: string;
   accountName: string;
+  isManeger: boolean;
   email: string;
   password: string;
   address: string;
@@ -33,3 +34,22 @@ export type HandleResponseType<T = unknown> = (
   message: string,
   data?: T | null
 ) => void;
+
+export type TransferBody = {
+  receiverAcc: string;
+  amount: number;
+};
+export type userWithdrawalBody = {
+  amount: number;
+};
+export type ElectricityBody = {
+  meterNumber: string;
+  amount: number;
+};
+
+export interface ResetPasswordBody {
+  email: string;
+  code: string;
+  newPassword: string;
+  confirmPassword: string;
+}

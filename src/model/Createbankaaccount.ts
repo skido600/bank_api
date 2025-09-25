@@ -3,6 +3,8 @@ import Account from "../model/AccountSchema.ts";
 const createBankAccount = async (
   userId: string,
   phonenumber: string,
+  accountName: string,
+  Email: String,
   balance: number = 10000
 ) => {
   const accountNumber = phonenumber.substring(1);
@@ -10,6 +12,8 @@ const createBankAccount = async (
     userId,
     accountNumber,
     balance,
+    accountName,
+    Email,
   });
 };
 

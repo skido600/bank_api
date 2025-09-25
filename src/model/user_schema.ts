@@ -1,4 +1,4 @@
-import mongoose, { Schema, Model } from "mongoose";
+import mongoose, { Schema } from "mongoose";
 import type { AuthUser } from "../type/types.ts";
 
 const userSchema = new Schema(
@@ -34,6 +34,7 @@ const userSchema = new Schema(
     },
     accountName: {
       type: String,
+      unique: true,
     },
     address: {
       type: String,
@@ -46,6 +47,11 @@ const userSchema = new Schema(
     },
     verificationCode: {
       type: String,
+      required: false,
+    },
+    isManeger: {
+      type: Boolean,
+      default: false,
       required: false,
     },
     verificationCodeExpires: { type: Date, required: false },
@@ -64,8 +70,7 @@ userSchema.pre("save", function (next) {
 
   next();
 });
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
+
 const Auth = mongoose.model<AuthUser>("Auth", userSchema);
 
 export default Auth;

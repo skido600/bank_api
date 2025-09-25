@@ -4,8 +4,12 @@ export interface TransactionDoc extends Document {
   senderAcc: string;
   receiverAcc: string;
   amount: number;
+  senderName: string;
+  receiverName: string;
   type: "debit" | "credit";
   status: "pending" | "success" | "failed";
+  transferId: string;
+  userId: mongoose.Types.ObjectId;
   reference: string;
   createdAt: Date;
   updatedAt: Date;
@@ -13,7 +17,9 @@ export interface TransactionDoc extends Document {
 const transactionSchema = new Schema<TransactionDoc>(
   {
     senderAcc: { type: String, required: true },
+    senderName: { type: String, required: true },
     receiverAcc: { type: String, required: true },
+    receiverName: { type: String, required: true },
     amount: { type: Number, required: true },
     type: {
       type: String,
@@ -25,8 +31,11 @@ const transactionSchema = new Schema<TransactionDoc>(
       enum: ["pending", "success", "failed"],
       default: "success",
     },
+
     reference: { type: String, unique: true },
+    userId: { type: Schema.Types.ObjectId, ref: "Auth", required: true },
   },
+
   { timestamps: true }
 );
 

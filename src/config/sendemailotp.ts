@@ -9,7 +9,7 @@ async function sendMail(email: string, verificationCode: string) {
   });
 
   let info = await transporter.sendMail({
-    from: `"wire"  <${process.env.EMAIL_USER}>`,
+    from: `  wire otp  <${process.env.EMAIL_USER}>`,
     to: email,
     subject: "Verify your email",
     text: `Your verification code is ${verificationCode}. It expires in 10 minutes.`,
